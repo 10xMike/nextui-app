@@ -1,0 +1,44 @@
+- router:
+	react -> logico
+	next ->  fisico (navigando da indirizzo) / logico (navigando tramite router)
+- struttura progetto:
+	v13+ -> cartella app
+	v12- -> cartella pages
+
+ 
+v12 -> getServerSideProps (SSR) -> server elabora la request e manda i dati al client
+		- il client parte che già ha delle informazioni di base su come deve renderizzarsi
+ 
+	-> getStaticProps (SSG) -> a build-time viene generata la pagina (il comportamento è uguale a SSR)
+	 + revalidate (ISR) (opzionale) (la pagina generata a build-time ha una scadenza) 
+	 + getStaticPaths -> elenco delle pagine da invocare a build-time
+	-> hydration --> suppressHydrationWarning o lazyLoadin (dymanic) + att ssr:false -> componente sarà solo client-side
+ 
+v14 -> la funzione SS è implementata nel componente "pagina" è async ed include la getXXProps
+	 + generateStaticParams === getStaticPaths(v12)
+	-> hydration è superato con "use server" / "use client"
+	 componenti dinamici DEVONO essere client
+	 i componenti server sono tradotti come HTML statico
+	componente server può contenere + componenti client
+	componente client può contenere solo 1 componente server (come child)
+pagine
+	"path"/index -> risponde all' url "/path"
+	[slug]/index -> riponde a una parola nella url : /c o /mamma, ecc
+	"[padre]/[figlio]/index" -> risponde a url tipo /a/b o /catalog/1, ecc
+	[...slug]/index -> slug sarà un array
+	[[slug]]/index -> catch-all
+ 
+ 
+const isClientSide = () => typeof window !== "undefined"
+ 
+useEffect (ss + cs) vs useLayoutEffect (cs)
+ 
+const myEffect = isClientSide ? useLayoutEffect : useEffect
+ 
+myEffect(() => {
+	// fai qualcosa
+},[])
+
+
+calendar, con lista di persone (numero di persone), tratta (civ-sicilia), submit di mask, post request 
+mostra in pagina la risposta
